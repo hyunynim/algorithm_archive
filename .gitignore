@@ -47,3 +47,6 @@
 *.iobj
 *.ipdb
 Algorithm/
+*.json
+*.txt
+*.idb
