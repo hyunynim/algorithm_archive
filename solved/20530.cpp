@@ -4,20 +4,19 @@ vector<int> adj[202020];
 int chk[202020];
 bool visited[202020];
 vector<int> cycle;
-map<int, int> connect;
-int v1, v2;
-void go(int s, int prev) {
-	if (chk[s]) {
+int v1;
+void FindCycle(int s, int prev) {
+	if (visited[s]) {
 		v1 = s;
 		cycle.push_back(s);
 		return;
 	}
-	chk[s] = 1;
+	visited[s] = 1;
 	for (int i = 0; i < adj[s].size(); ++i) {
 		int nx = adj[s][i];
 		if (nx == prev) continue;
 		
-		go(nx, s);
+		FindCycle(nx, s);
 		
 		if (v1 == -1) return;
 		
@@ -33,60 +32,36 @@ void go(int s, int prev) {
 
 	}
 }
-int go2(int s, int num) {
-	if (chk[s]) return 0;
+void MakeSubtree(int s, int num) {
+	if (chk[s]) return;
 	chk[s] = num;
 	for (int i = 0; i < adj[s].size(); ++i)
-		go2(adj[s][i], num);
-	return 2;
-}
-int c = -1;
-void go3(int s) {
-	if (visited[s]) return;
-	visited[s] = 1;
-	for (auto i : adj[s]) {
-		if (chk[s] != 2 && chk[i] == 2)
-			connect[chk[s]] = i;
-		if (chk[s] == 2 && chk[i] != 2)
-			connect[chk[i]] = s;
-		go3(i);
-	}
+		MakeSubtree(adj[s][i], num);
 }
 int main() {
 	int n, q; scanf("%d %d", &n, &q);
-	for (int i = 0; i < n; ++i) {
-		int a, b; scanf("%d %d", &a, &b);
-		adj[a].push_back(b);
-		adj[b].push_back(a);
-	}
-	go(1, -1);
-	memset(chk, 0, sizeof(chk));
-	for (auto i : cycle) {
-		chk[i] = 2;
-		connect[i] = -1;
-	}
-	int cnt = -1;
-	for (int i = 1; i <= n; ++i) 
-		cnt -= go2(i, cnt);
 
-	go3(1);
+	for (int i = 0; i < n; ++i) {
+		int u, v; scanf("%d %d", &u, &v);
+		adj[u].push_back(v);
+		adj[v].push_back(u);
+	}
+
+	FindCycle(1, -1);
+	
+	for (auto i : cycle)
+		chk[i] = i;
+	for (auto i : cycle) {
+		chk[i] = 0;
+		MakeSubtree(i, i);
+	}
+	
 
 	for (int i = 0; i < q; ++i) {
 		int u, v; scanf("%d %d", &u, &v);
-		int cu = chk[u];
-		int cv = chk[v];
-		if (cu == cv && cu == 2)
+		if (chk[u] != chk[v])
 			puts("2");
-		else if (cu == cv)
+		else
 			puts("1");
-		else {
-			if ((cu == 2 && connect[cv] == u) 
-				|| (cv == 2 && connect[cu] == v)
-				|| (connect[cu] == connect[cv]))
-				puts("1");
-			else
-				puts("2");
-		}
-
 	}
 }
