@@ -1,22 +1,23 @@
 #include<bits/stdc++.h>
 using namespace std;
-const char * mbti[] = { "ISTJ", "ISFJ", "INFJ", "INTJ", "ISTP", "ISFP", "INFP", "INTP", "ESTP", "ESFP", "ENFP", "ENTP", "ESTJ", "ESFJ", "ENFJ", "ENTJ" };
+const char* mbti[] = { "ISTJ", "ISFJ", "INFJ", "INTJ", "ISTP", "ISFP", "INFP", "INTP" 
+						,"ESTP", "ESFP", "ENFP", "ENTP", "ESTJ", "ESFJ", "ENFJ", "ENTJ" };
 int d[16][16][16];
 int dist(int a, int b, int c) {
 	int res = 0;
 	for (int i = 0; i < 4; ++i) {
-		res += (mbti[a] != mbti[b]);
-		res += (mbti[b] != mbti[c]);
-		res += (mbti[c] != mbti[a]);
+		res += (mbti[a][i] != mbti[b][i]);
+		res += (mbti[b][i] != mbti[c][i]);
+		res += (mbti[c][i] != mbti[a][i]);
 	}
 	return res;
 }
 map<string, int> comp;
 vector<int> cnt;
 int ans;
-void go(int toPick, vector<int> & pick) {
+void go(int toPick, vector<int>& pick) {
 	if (toPick == 0) {
-		ans = max(ans, d[pick[0]][pick[1]][pick[2]]);
+		ans = min(ans, d[pick[0]][pick[1]][pick[2]]);
 		return;
 	}
 	for (int i = 0; i < 16; ++i) {
@@ -49,11 +50,12 @@ int main() {
 		for (int i = 0; i < 16; ++i)
 			cnt[i] = min(3, cnt[i]);
 
+		ans = 1e9;
+
 		vector<int> tmp;
 		go(3, tmp);
 
 		printf("%d\n", ans);
-		ans = 0;
 		cnt.clear();
 
 	}
