@@ -14,25 +14,20 @@ template<class T> T lcm(T a, T b) { return a / gcd(a, b) * b; }
 mt19937 RNG(chrono::high_resolution_clock::now().time_since_epoch().count());
 /*Templates end*/
 void solve(){
-    //TODO here
-    int t; cin >> t;
-	while (t--) {
-		ll w, h, n; cin >> w >> h >> n;
-		ll count = 1;
-		while (w % 2 == 0 || h % 2 == 0) {
-			if (w % 2 == 0) {
-				w /= 2;
-				count *= 2;
-			}
-			if (h % 2 == 0) {
-				h /= 2;
-				count *= 2;
-			}
+	int t; scanf("%d", &t);
+	while(t--){
+		int n; scanf("%d", &n);
+		string str = "";
+		int cnt = 9;
+		bool flag = 0;
+		for(int i = 0; i<n; ++i){
+			str.push_back('0' + cnt);
+			if(flag) ++cnt;
+			else --cnt;
+			cnt %= 10;
+			if(cnt == 0) flag = 1;
 		}
-		if (count >= n)
-			cout << "YES\n";
-		else
-			cout << "NO\n";
+	printf("%s\n", str.c_str());
 	}
 }
 int main(){
