@@ -4,13 +4,6 @@ typedef long long ll;
 bool prime[101010] = { 1, 1 };
 vector<ll> p;
 ll cnt;
-void go(int s, ll cur, int prev, ll mid) {
-	if(s)
-		cnt += mid / cur * (s % 2 ? 1 : -1);
-	for (int i = prev + 1; i < p.size() && cur * p[i] <= mid; ++i) 
-		go(s + 1, cur * p[i], i, mid);
-	
-}
 void go2(int s, ll cur, int prev, ll mid, int mp) {
 	if (s > 1)
 		cnt += mid / cur * (s % 2 ? +1 : -1);
@@ -27,7 +20,16 @@ void pre() {
 	for (ll i = 2; i * i <= 1e9; ++i)
 		if (!prime[i])p.push_back(i);
 }
+bool check(int mid, int P) {
+	for (int i = 0; i < p.size() && p[i] < P; ++i) 
+		if (mid % p[i] == 0) 
+			return 0;
+		
+	
+	return 1;
+}
 int main() {
+	p.reserve(10000);
 	pre();
 	int n, P; scanf("%d %d", &n, &P);
 	int l = 1, r = 1e9;
@@ -46,8 +48,13 @@ int main() {
 			if (mid % P != 0)
 				r = mid - 1;
 			else {
-				printf("%d", mid);
-				return 0;
+				if (!check(mid, P)) {
+					r = mid - 1;
+				}
+				else {
+					printf("%d", mid);
+					return 0;
+				}
 			}
 		}
 	}
